@@ -4,5 +4,3 @@ doc
 .lock*
 *.pyc
 .waf*
-.vscode
-.gitignore

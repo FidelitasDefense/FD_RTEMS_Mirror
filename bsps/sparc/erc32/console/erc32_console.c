@@ -330,32 +330,27 @@ static void erc32_console_initialize(
     rtems_isr_entry previous_isr_b;
     rtems_isr_entry previous_isr_error;
 
-    rtems_interrupt_catch(erc32_console_isr_a, CONSOLE_UART_A_TRAP, &previous_isr_a);
+    rtems_interrupt_catch(
+      erc32_console_isr_a,
+      CONSOLE_UART_A_TRAP,
+      &previous_isr_a
+    );
     (void) previous_isr_a;
-    if (SPARC_IS_INTERRUPT_TRAP(CONSOLE_UART_A_TRAP)) 
-    {
-      uint32_t source = SPARC_INTERRUPT_TRAP_TO_SOURCE(CONSOLE_UART_A_TRAP);
-      ERC32_Clear_interrupt(source);
-      ERC32_Unmask_interrupt(source);
-    }
+    ERC32_trap_handler(CONSOLE_UART_A_TRAP);
     
-    rtems_interrupt_catch(erc32_console_isr_b, CONSOLE_UART_B_TRAP, &previous_isr_b);
+    rtems_interrupt_catch(erc32_console_isr_b,
+      CONSOLE_UART_B_TRAP,
+      &previous_isr_b
+    );
     (void) previous_isr_b;
-    if (SPARC_IS_INTERRUPT_TRAP(CONSOLE_UART_B_TRAP)) 
-    {
-      uint32_t source = SPARC_INTERRUPT_TRAP_TO_SOURCE(CONSOLE_UART_B_TRAP);
-      ERC32_Clear_interrupt(source);
-      ERC32_Unmask_interrupt(source);
-    }
+    ERC32_trap_handler(CONSOLE_UART_B_TRAP);
     
-    rtems_interrupt_catch(erc32_console_isr_error, CONSOLE_UART_ERROR_TRAP, &previous_isr_error);
+    rtems_interrupt_catch(erc32_console_isr_error,
+      CONSOLE_UART_ERROR_TRAP,
+      &previous_isr_error
+    );
     (void) previous_isr_error;
-    if (SPARC_IS_INTERRUPT_TRAP(CONSOLE_UART_ERROR_TRAP)) 
-    {
-      uint32_t source = SPARC_INTERRUPT_TRAP_TO_SOURCE(CONSOLE_UART_ERROR_TRAP);
-      ERC32_Clear_interrupt(source);
-      ERC32_Unmask_interrupt(source);
-    }
+    ERC32_trap_handler(CONSOLE_UART_ERROR_TRAP);
   #endif
 
    /* Clear any previous error flags */
