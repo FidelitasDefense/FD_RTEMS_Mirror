@@ -112,6 +112,13 @@ __gnat_install_handler_common (int t1, int t2)
 	    rtems_interrupt_catch (__gnat_interrupt_handler, trap, &previous_isr);
 	}
       else if ((trap != 5 && trap != 6) && ((trap < 0x70) || (trap > 0x83)))
-	set_vector (__gnat_exception_handler, SPARC_SYNCHRONOUS_TRAP (trap), 1);
+  rtems_interrupt_catch (__gnat_exception_handler, SPARC_SYNCHRONOUS_TRAP (trap), &previous_isr);
+  
+  if (SPARC_IS_INTERRUPT_TRAP(SPARC_SYNCHRONOUS_TRAP (trap))) 
+  {
+    uint32_t source = SPARC_INTERRUPT_TRAP_TO_SOURCE(SPARC_SYNCHRONOUS_TRAP (trap));
+    ERC32_Clear_interrupt(source);
+    ERC32_Unmask_interrupt(source);
+  }
     }
 }

@@ -62,7 +62,15 @@
 #define TM27_USE_VECTOR_HANDLER
 
 #define Install_tm27_vector( handler ) \
-  set_vector( (handler), TEST_VECTOR, 1 );
+  rtems_isr_entry previous_handler; \
+  rtems_interrupt_catch( (handler), TEST_VECTOR, &previous_handler ); \
+
+  if (SPARC_IS_INTERRUPT_TRAP(TEST_VECTOR)) \
+  { \
+    uint32_t source = SPARC_INTERRUPT_TRAP_TO_SOURCE(TEST_VECTOR); \
+    ERC32_Clear_interrupt(source); \
+    ERC32_Unmask_interrupt(source); \
+  } \
 
 #define Cause_tm27_intr() \
   __asm__ volatile( "ta 0x10; nop " );

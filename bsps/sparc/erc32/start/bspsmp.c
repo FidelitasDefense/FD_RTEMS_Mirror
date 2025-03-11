@@ -74,7 +74,16 @@ static rtems_isr bsp_inter_processor_interrupt(
 
 static void erc32_install_inter_processor_interrupt( void )
 {
-  set_vector( bsp_inter_processor_interrupt, IPI_VECTOR, 1 );
+  rtems_isr_entry previous_isr;
+
+  rtems_interrupt_catch(bsp_inter_processor_interrupt, IPI_VECTOR, &previous_isr);
+
+  if (SPARC_IS_INTERRUPT_TRAP(IPI_VECTOR)) 
+  {
+    uint32_t source = SPARC_INTERRUPT_TRAP_TO_SOURCE(IPI_VECTOR);
+    ERC32_Clear_interrupt(source);
+    ERC32_Unmask_interrupt(source);
+  }
 }
 
 RTEMS_SYSINIT_ITEM(
