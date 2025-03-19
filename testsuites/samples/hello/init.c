@@ -33,11 +33,11 @@
 #include <rtems.h>
 #include <tmacros.h>
 
-const char rtems_test_name[]="HELLO WORLD";
+const char rtems_test_name[] = "HELLO WORLD";
 
 static rtems_task Init( rtems_task_argument ignored )
 {
-  rtems_print_printer_fprintf_putc(&rtems_test_printer);
+  rtems_print_printer_fprintf_putc( &rtems_test_printer );
   TEST_BEGIN();
   printf( "Hello from the Dark Side!\n" );
   TEST_END();
