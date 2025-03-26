@@ -74,7 +74,15 @@ static rtems_isr bsp_inter_processor_interrupt(
 
 static void erc32_install_inter_processor_interrupt( void )
 {
-  set_vector( bsp_inter_processor_interrupt, IPI_VECTOR, 1 );
+  rtems_isr_entry previous_isr;
+
+  rtems_interrupt_catch(
+    bsp_inter_processor_interrupt,
+    IPI_VECTOR,
+    &previous_isr
+  );
+
+  ERC32_trap_handler(IPI_VECTOR);
 }
 
 RTEMS_SYSINIT_ITEM(

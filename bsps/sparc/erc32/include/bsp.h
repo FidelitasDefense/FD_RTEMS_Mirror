@@ -84,12 +84,6 @@ extern int   end;        /* last address in the program */
 
 /* functions */
 
-rtems_isr_entry set_vector(                     /* returns old vector */
-    rtems_isr_entry     handler,                /* isr routine        */
-    rtems_vector_number vector,                 /* vector number      */
-    int                 type                    /* RTEMS or RAW intr  */
-);
-
 void BSP_fatal_exit(uint32_t error);
 
 /* Interrupt Service Routine (ISR) pointer */
@@ -181,6 +175,11 @@ void rtems_bsp_delay(int usecs);
  */
 void console_outbyte_polled(int  port, unsigned char ch);
 int console_inbyte_nonblocking(int port);
+
+/*
+*  Prototype for handling ERC32 traps
+*/
+void ERC32_trap_handler(rtems_vector_number vector);
 
 #ifdef __cplusplus
 }
