@@ -1,6 +1,6 @@
 #Jonas 04022025
 
-name: "CodeQL Advanced CPP"
+name: "CodeQL Advanced C"
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: cpp  # Specify C++ as the language
+          languages: c  # Specify C as the language
 
       - name: Build the code (if applicable)
         run: |
@@ -40,14 +40,14 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:cpp"
+          category: "/language:c"
 
       - name: Upload CodeQL Database (Optional)
         run: |
-          zip -r codeql-database.zip $CODEQL_EXTRACTOR_CPP_ROOT
+          zip -r codeql-database.zip $CODEQL_EXTRACTOR_C_ROOT
           mv codeql-database.zip $GITHUB_WORKSPACE/
 
       - name: List CodeQL Database contents
-        run: ls -R $CODEQL_EXTRACTOR_CPP_ROOT
+        run: ls -R $CODEQL_EXTRACTOR_C_ROOT
   
 
