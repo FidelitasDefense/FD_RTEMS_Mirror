@@ -94,8 +94,7 @@ jobs:
         echo 'If you are using a "manual" build mode for one or more of the' 
         make bootstrap
         make release
-        #exit 1
-
+        
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
