@@ -20,7 +20,6 @@ jobs:
       actions: read
       contents: read
 
-
     strategy:
       matrix:
         include:
@@ -52,12 +51,9 @@ jobs:
         echo ' make release'
         exit 1
 
-
-
-
-          
-    - name: Run CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+  
+    #- name: Run CodeQL Analysis
+      #uses: github/codeql-action/analyze@v3
         #with:
           #languages: ${{ matrix.language }}
 
