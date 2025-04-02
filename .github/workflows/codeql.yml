@@ -4,59 +4,41 @@ name: "CodeQL Advanced C"
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
   schedule:
-    - cron: '30 1 * * 1'  # Runs weekly on Monday at 01:30 UTC
+    - cron: '0 0 * * 0'
 
 jobs:
   analyze:
-    name: Run CodeQL Analysis
+    name: Analyze
     runs-on: ubuntu-latest
-
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
-
     strategy:
       fail-fast: false
       matrix:
-        include:
-          # Analyzes C and C++ code using the commands in `Build C and C++ code`
-          - language: c-cpp
-            build-mode: autobuild
-          # Analyzes C# code by automatically detecting a build
-          - language: csharp
-            build-mode: autobuild
-          # Analyzes Java code directly from the codebase without a build
-          - language: java-kotlin
-            build-mode: none # analyzes Java only
+        language: [ 'c-cpp' ]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
-    
-    # Initializes CodeQL tools and creates a codebase for analysis.
+      uses: actions/checkout@v2
+
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
-    - if: ${{ matrix.build-mode == 'manual' }}
-      name: Build C and C++ code
-      run: |
-        echo 'If you are using a "manual" build mode for one or more of the' \
-          'languages you are analyzing, replace this with the commands to build' \
-          'your code, for example:'
-        echo ' make bootstrap'
-        echo ' make release'
-        exit 1
 
-  
-    #- name: Run CodeQL Analysis
-      #uses: github/codeql-action/analyze@v3
-        #with:
-          #languages: ${{ matrix.language }}
+    - name: Build code
+      run: |
+        # Add commands to build your code
+        mkdir build
+        cd build
+        cmake ..
+        make
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:${{ matrix.language }}"
 
   
 
