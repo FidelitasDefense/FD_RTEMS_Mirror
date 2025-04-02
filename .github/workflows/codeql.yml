@@ -35,15 +35,11 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-
-      #- name: Build the Code (if applicable)
-        #run: |
-          #if [ -f "Makefile" ]; then make;
-          #elif [ -f "CMakeLists.txt" ]; then mkdir -p build && cd build && cmake .. && make;
-          #else echo "No build system found, skipping."; fi
-
+          
       - name: Run CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+        with:
+          languages: ${{ matrix.language }}
 
   
 
