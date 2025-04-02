@@ -12,11 +12,11 @@ on:
 
 jobs:
   analyze:
-    name: Analyze Code with CodeQL
-    runs-on: ubuntu-latest  # Use Ubuntu, or switch to windows/macOS if needed
+    name: Run CodeQL Analysis
+    runs-on: ubuntu-latest
 
     permissions:
-      security-events: write  # Required for uploading SARIF results
+      security-events: write
       actions: read
       contents: read
 
@@ -24,30 +24,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: List directory contents
-        run: ls -R
-
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: c  # Specify C as the language
+          languages: c
 
-      - name: Build the code (if applicable)
+      - name: Build the Code (if applicable)
         run: |
-          # Add build steps here if needed
-          echo "Build step (if necessary) skipped"
-      
-      - name: Perform CodeQL Analysis
+          if [ -f "Makefile" ]; then make;
+          elif [ -f "CMakeLists.txt" ]; then mkdir -p build && cd build && cmake .. && make;
+          else echo "No build system found, skipping."; fi
+
+      - name: Run CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:c"
 
-      - name: Upload CodeQL Database (Optional)
-        run: |
-          zip -r codeql-database.zip $CODEQL_EXTRACTOR_C_ROOT
-          mv codeql-database.zip $GITHUB_WORKSPACE/
-
-      - name: List CodeQL Database contents
-        run: ls -R $CODEQL_EXTRACTOR_C_ROOT
   
 
