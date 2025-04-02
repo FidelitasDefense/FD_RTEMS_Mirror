@@ -1,35 +1,53 @@
 #Jonas 04022025
 
-name: "CodeQL Advanced C"
+name: "CodeQL Advanced CPP"
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
   schedule:
-    - cron: '0 12 * * 1'  # Runs every Monday at 12:00 UTC
+    - cron: '30 1 * * 1'  # Runs weekly on Monday at 01:30 UTC
 
 jobs:
   analyze:
-    name: "CodeQL Analysis"
-    runs-on: ubuntu-latest
+    name: Analyze Code with CodeQL
+    runs-on: ubuntu-latest  # Use Ubuntu, or switch to windows/macOS if needed
+
     permissions:
-      security-events: write
+      security-events: write  # Required for uploading SARIF results
       actions: read
       contents: read
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: List directory contents
+        run: ls -R
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: c
+          languages: cpp  # Specify C++ as the language
 
+      - name: Build the code (if applicable)
+        run: |
+          # Add build steps here if needed
+          echo "Build step (if necessary) skipped"
+      
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:cpp"
+
+      - name: Upload CodeQL Database (Optional)
+        run: |
+          zip -r codeql-database.zip $CODEQL_EXTRACTOR_CPP_ROOT
+          mv codeql-database.zip $GITHUB_WORKSPACE/
+
+      - name: List CodeQL Database contents
+        run: ls -R $CODEQL_EXTRACTOR_CPP_ROOT
+  
 
